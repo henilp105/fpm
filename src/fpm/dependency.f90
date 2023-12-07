@@ -64,6 +64,7 @@ module fpm_dependency
                      serializable_t
   use fpm_manifest, only: package_config_t, dependency_config_t, get_package_data
   use fpm_manifest_dependency, only: manifest_has_changed, dependency_destroy
+  use fpm_manifest_preprocess, only: operator(==)
   use fpm_strings, only: string_t, operator(.in.)
   use fpm_toml, only: toml_table, toml_key, toml_error, toml_serialize, &
                       get_value, set_value, add_table, toml_load, toml_stat, set_string
@@ -325,7 +326,7 @@ contains
     ! After resolving all dependencies, check if we have cached ones to avoid updates
     if (allocated(self%cache)) then
       call new_dependency_tree(cached, verbosity=self%verbosity,cache=self%cache)
-      call cached%load_cache(self%cache, error)
+      call cached%load(self%cache, error)
       if (allocated(error)) return
 
       ! Skip root node
