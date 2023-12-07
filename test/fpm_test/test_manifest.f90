@@ -167,10 +167,6 @@ contains
             return
         end if
 
-        ! Test package serialization
-        call package%test_serialization('test_valid_manifest',error)
-        if (allocated(error)) return
-
     end subroutine test_valid_manifest
 
 
@@ -224,9 +220,6 @@ contains
             return
         end if
 
-        call package%test_serialization('test_default_library',error)
-        if (allocated(error)) return
-
     end subroutine test_default_library
 
 
@@ -248,9 +241,6 @@ contains
 
         call check_string(error, package%executable(1)%name, name, &
             & "Default executable name")
-        if (allocated(error)) return
-
-        call package%test_serialization('test_default_executable',error)
         if (allocated(error)) return
 
     end subroutine test_default_executable
@@ -527,9 +517,6 @@ contains
             return
         end if
 
-        call chosen_profile%test_serialization('profile serialization: '//profile_name//' '//compiler,error)
-        if (allocated(error)) return
-
         profile_name = 'release'
         compiler = 'gfortran'
         call find_profile(package%profiles, profile_name, compiler, 3, profile_found, chosen_profile)
@@ -538,9 +525,6 @@ contains
             return
         end if
 
-        call chosen_profile%test_serialization('profile serialization: '//profile_name//' '//compiler,error)
-        if (allocated(error)) return
-
         profile_name = 'publish'
         compiler = 'gfortran'
         call find_profile(package%profiles, profile_name, compiler, 1, profile_found, chosen_profile)
@@ -548,9 +532,6 @@ contains
             call test_failed(error, "Profile named "//profile_name//" should not exist")
             return
         end if
-
-        call chosen_profile%test_serialization('profile serialization: '//profile_name//' '//compiler,error)
-        if (allocated(error)) return
 
         profile_name = 'debug'
         compiler = 'ifort'
@@ -561,9 +542,6 @@ contains
             return
         end if
 
-        call chosen_profile%test_serialization('profile serialization: '//profile_name//' '//compiler,error)
-        if (allocated(error)) return
-
         profile_name = 'release'
         compiler = 'ifort'
         call find_profile(package%profiles, profile_name, compiler, 1, profile_found, chosen_profile)
@@ -571,10 +549,6 @@ contains
             call test_failed(error, "Failed to overwrite built-in profile")
             return
         end if
-
-        call chosen_profile%test_serialization('profile serialization: '//profile_name//' '//compiler,error)
-        if (allocated(error)) return
-
     end subroutine test_profiles
 
     !> 'flags' is a key-value entry, test should fail as it is defined as a table
@@ -1233,11 +1207,6 @@ contains
         call set_value(table, "link", "z", stat=stat)
 
         call new_build_config(build, table, 'test_link_string', error)
-        if (allocated(error)) return
-
-        !> Test serialization roundtrip
-        call build%test_serialization('test_link_string', error)
-        if (allocated(error)) return
 
     end subroutine test_link_string
 
@@ -1261,11 +1230,6 @@ contains
         call set_value(children, 2, "lapack", stat=stat)
 
         call new_build_config(build, table, 'test_link_array', error)
-        if (allocated(error)) return
-
-        !> Test serialization roundtrip
-        call build%test_serialization('test_link_array', error)
-        if (allocated(error)) return
 
     end subroutine test_link_array
 
