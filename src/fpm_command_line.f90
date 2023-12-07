@@ -258,8 +258,6 @@ contains
             case default     ; os_type =  "OS Type:     UNKNOWN"
         end select
 
-        is_unix = os_is_unix(os)
-
         ! Get current release version
         version = fpm_version()
         version_s = version%s()
