@@ -39,7 +39,7 @@ contains
 !> Constructs a valid fpm model from command line settings and the toml manifest.
 subroutine build_model(model, settings, package, error)
     type(fpm_model_t), intent(out) :: model
-    class(fpm_build_settings), intent(inout) :: settings
+    type(fpm_build_settings), intent(inout) :: settings
     type(package_config_t), intent(inout) :: package
     type(error_t), allocatable, intent(out) :: error
 
