@@ -18,7 +18,7 @@ module fpm_manifest_preprocess
    implicit none
    private
 
-   public :: preprocess_config_t, new_preprocess_config, new_preprocessors
+   public :: preprocess_config_t, new_preprocess_config, new_preprocessors, operator(==)
 
    !> Configuration meta data for a preprocessor
    type, extends(serializable_t) :: preprocess_config_t
@@ -48,6 +48,10 @@ module fpm_manifest_preprocess
    end type preprocess_config_t
 
    character(*), parameter, private :: class_name = 'preprocess_config_t'
+
+   interface operator(==)
+       module procedure preprocess_is_same
+   end interface
 
 contains
 
@@ -191,7 +195,9 @@ contains
 
    logical function preprocess_is_same(this,that)
       class(preprocess_config_t), intent(in) :: this
-      class(serializable_t), intent(in) :: that
+      class(preprocess_config_t), intent(in) :: that
+
+      integer :: istr
 
       preprocess_is_same = .false.
 
@@ -201,9 +207,24 @@ contains
             if (allocated(this%name)) then
                 if (.not.(this%name==other%name)) return
             endif
-            if (.not.(this%suffixes==other%suffixes)) return
-            if (.not.(this%directories==other%directories)) return
-            if (.not.(this%macros==other%macros)) return
+            if (.not.(allocated(this%suffixes).eqv.allocated(other%suffixes))) return
+            if (allocated(this%suffixes)) then
+               do istr=1,size(this%suffixes)
+                  if (.not.(this%suffixes(istr)%s==other%suffixes(istr)%s)) return
+               end do
+            end if
+            if (.not.(allocated(this%directories).eqv.allocated(other%directories))) return
+            if (allocated(this%directories)) then
+               do istr=1,size(this%directories)
+                  if (.not.(this%directories(istr)%s==other%directories(istr)%s)) return
+               end do
+            end if
+            if (.not.(allocated(this%macros).eqv.allocated(other%macros))) return
+            if (allocated(this%macros)) then
+               do istr=1,size(this%macros)
+                  if (.not.(this%macros(istr)%s==other%macros(istr)%s)) return
+               end do
+            end if
 
          class default
             ! Not the same type
