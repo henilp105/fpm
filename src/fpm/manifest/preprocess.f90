@@ -195,7 +195,7 @@ contains
 
    logical function preprocess_is_same(this,that)
       class(preprocess_config_t), intent(in) :: this
-      class(preprocess_config_t), intent(in) :: that
+      class(serializable_t), intent(in) :: that
 
       integer :: istr
 
