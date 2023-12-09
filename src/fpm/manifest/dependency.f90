@@ -28,7 +28,7 @@ module fpm_manifest_dependency
         & git_target_revision, git_target_default, operator(==), git_matches_manifest
     use fpm_toml, only: toml_table, toml_key, toml_stat, get_value, check_keys, serializable_t, add_table, &
         & set_value, set_string
-    use fpm_filesystem, only: windows_path
+    use fpm_filesystem, only: windows_path, join_path
 
     use fpm_environment, only: get_os_type, OS_WINDOWS
     use fpm_manifest_metapackages, only: metapackage_config_t, is_meta_package, new_meta_config, &
