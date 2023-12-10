@@ -21,9 +21,11 @@ use fpm_targets, only: targets_from_sources, build_target_t, build_target_ptr, &
 use fpm_manifest, only : get_package_data, package_config_t
 use fpm_meta, only : resolve_metapackages
 use fpm_error, only : error_t, fatal_error, fpm_stop
+use fpm_toml, only: name_is_json
 use, intrinsic :: iso_fortran_env, only : stdin => input_unit, &
                                         & stdout => output_unit, &
                                         & stderr => error_unit
+
 use iso_c_binding, only: c_char, c_ptr, c_int, c_null_char, c_associated, c_f_pointer
 use fpm_environment, only: os_is_unix
 
@@ -37,7 +39,7 @@ contains
 !> Constructs a valid fpm model from command line settings and the toml manifest.
 subroutine build_model(model, settings, package, error)
     type(fpm_model_t), intent(out) :: model
-    class(fpm_build_settings), intent(inout) :: settings
+    class(fpm_build_settings), intent(in) :: settings
     type(package_config_t), intent(inout) :: package
     type(error_t), allocatable, intent(out) :: error
 
@@ -456,6 +458,12 @@ call targets_from_sources(targets, model, settings%prune, error)
 if (allocated(error)) then
     call fpm_stop(1,'*cmd_build* Target error: '//error%message)
 end if
+
+!> Dump model to file
+if (len_trim(settings%dump)>0) then
+    call model%dump(trim(settings%dump),error,json=name_is_json(trim(settings%dump)))
+    if (allocated(error)) call fpm_stop(1,'*cmd_build* Model dump error: '//error%message)
+endif
 
 if(settings%list)then
     do i=1,size(targets)
