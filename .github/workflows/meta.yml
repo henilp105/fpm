@@ -181,7 +181,7 @@ jobs:
         sudo mkdir /usr/local/opt/gcc@10/lib
         sudo mkdir /usr/local/opt/gcc@10/lib/gcc
         sudo mkdir /usr/local/opt/gcc@10/lib/gcc/10
-        sudo mkdir /usr/local/lib/gcc/10
+        sudo mkdir -p /usr/local/lib/gcc/10
         sudo ln -fs /usr/local/opt/gcc@${{ env.GCC_V }}/lib/gcc/${{ env.GCC_V }}/libquadmath.0.dylib /usr/local/opt/gcc@10/lib/gcc/10/libquadmath.0.dylib
         sudo ln -fs /usr/local/opt/gcc@${{ env.GCC_V }}/lib/gcc/${{ env.GCC_V }}/libgfortran.5.dylib /usr/local/opt/gcc@10/lib/gcc/10/libgfortran.5.dylib
         # Newer gcc versions use libgcc_s.1.1.dylib
