@@ -143,6 +143,7 @@ character(len=:),allocatable :: name
 character(len=:),allocatable :: os_type
 character(len=ibug),allocatable :: names(:)
 character(len=:),allocatable :: tnames(:)
+logical :: conda=.false.
 
 character(len=:), allocatable :: version_text(:)
 character(len=:), allocatable :: help_new(:), help_fpm(:), help_run(:), &
@@ -290,6 +291,7 @@ contains
         compiler_args = &
           ' --profile " "' // &
           ' --no-prune F' // &
+          ' --conda F' // &
           ' --compiler "'//get_fpm_env(fc_env, fc_default)//'"' // &
           ' --c-compiler "'//get_fpm_env(cc_env, cc_default)//'"' // &
           ' --cxx-compiler "'//get_fpm_env(cxx_env, cxx_default)//'"' // &
@@ -541,6 +543,7 @@ contains
             c_compiler = sget('c-compiler')
             cxx_compiler = sget('cxx-compiler')
             archiver = sget('archiver')
+            ! conda = lget('conda')
             allocate(install_settings, source=fpm_install_settings(&
                 list=lget('list'), &
                 profile=val_profile,&
@@ -779,6 +782,8 @@ contains
         if(val_compiler=='') val_compiler='gfortran'
 
         val_flag = " " // sget('flag')
+        conda = lget('conda')
+        if (conda) val_flag = val_flag// ' -I$CONDA_PREFIX/include -L$CONDA_PREFIX/lib -Wl,-rpath -Wl,$CONDA_PREFIX/lib'
         val_cflag = " " // sget('c-flag')
         val_cxxflag = " "// sget('cxx-flag')
         val_ldflag = " " // sget('link-flag')
